@@ -1,16 +1,18 @@
-// Ардуино МЕГА
-
-
 void setup()
 {
-  Serial.begin(9600);
-  Serial3.begin(9600);
+  Serial.begin(9600); // Монитор порта (компьютер)
+  Serial3.begin(9600); // Инициализация порта, куда подключен модуль (только для Arduino MEGA)
 
-  
-  pinMode(8, OUTPUT);
+  // Если вы используете не Ардуино Мега, а любую другую версию, данный код работать не будет
+  // Необходимо подключить библиотеку SoftwareSerial и при помощи неё сделать Serial порт.
+  // У меня на канале есть видео на эту тему (самое первое из серии, про подключение модулей к ардуино)
+  // Ссылка на видео: https://www.youtube.com/watch?v=34l_DLCPEUQ
+
+  // Ноги M0 и M1 подключены в 8 и 9 пины
+  pinMode(8, OUTPUT); 
   pinMode(9, OUTPUT);
-  digitalWrite(8, HIGH);
-  digitalWrite(9, HIGH);
+  digitalWrite(8, HIGH); // Логическая единица
+  digitalWrite(9, HIGH); // Логическая единица
   
   delay(2000);
   
@@ -24,16 +26,17 @@ void setup()
 
 void loop()
 {
- delay(2000);
- Serial3.write(0xC1);
+ delay(2000); // Необходимо подождать 2 секунды, иначе все данные перемешаются друг с другом и ничего не сработает
+ 
+ Serial3.write(0xC1); // Передаём 3 байта, чтобы модуль вернул текущие параметры
  Serial3.write(0xC1);
  Serial3.write(0xC1);
   
- while(Serial3.available())
+ while(Serial3.available()) // Получаем параметры и выводим их в монитор порта
  {
   int inByte = Serial3.read();
   Serial.print(inByte, HEX);
   Serial.print(" ");
  }
- Serial.println(); 
+ Serial.println(); // Переносим каретку на новую строку, чтобы данные не сливались друг с другом
 }
